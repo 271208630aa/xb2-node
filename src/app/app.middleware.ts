@@ -21,6 +21,9 @@ export const defaultErrorHandler = (
   response: Response,
   next: NextFunction
 ) => {
+  if (error.message) {
+    console.log("发生错误：", error.message);
+  }
   let statusCode: number, message: String;
   switch (error.message) {
     default:
