@@ -26,6 +26,19 @@ export const defaultErrorHandler = (
   }
   let statusCode: number, message: String;
   switch (error.message) {
+    case "NAME_IS_REQUIRED":
+      statusCode = 400;
+      message = "请输入用户名";
+      break;
+    case "PASSWORD_IS_REQUIRED":
+      statusCode = 400;
+      message = "请输入密码";
+      break;
+    case "NAME_IS_EXISTS":
+      statusCode = 409;
+      message = "该用户已被注册";
+      break;
+
     default:
       statusCode = 500;
       message = "服务暂时出了点问题~~~";
