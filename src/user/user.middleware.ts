@@ -18,7 +18,7 @@ export const validateUser = async (
   }
 
   //验证用户名
-  const user = await userService.getUserByName(name);
+  const user = await userService.getUserByName(name, {});
   if (user) {
     return next(new Error("NAME_IS_EXISTS"));
   }
@@ -39,6 +39,8 @@ export const hashPassword = async (
 ) => {
   //准备数据
   const { password } = request.body;
+
+  console.log(`password : ${password}`);
 
   // HASH 密码
   request.body.password = await bcrypt.hash(password, 10);
