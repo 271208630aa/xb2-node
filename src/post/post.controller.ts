@@ -25,7 +25,6 @@ export const index = async (
 /**
  * 创建内容
  */
-
 export const store = async (
   request: Request,
   response: Response,
@@ -33,14 +32,22 @@ export const store = async (
 ) => {
   //准备数据
   const { title, content } = request.body;
+  // 解构重命名为userId
+  const { id: userId } = request.user;
   try {
-    const data = await postService.createPost({ title, content });
+    const data = await postService.createPost({ title, content, userId });
     response.status(201).send(data);
   } catch (error) {
     next(error);
   }
 };
 
+/**
+ * 更新内容
+ * @param request
+ * @param response
+ * @param next
+ */
 export const update = async (
   request: Request,
   response: Response,
@@ -63,6 +70,12 @@ export const update = async (
   }
 };
 
+/**
+ * 删除内容
+ * @param request
+ * @param response
+ * @param next
+ */
 export const destroy = async (
   request: Request,
   response: Response,

@@ -7,6 +7,14 @@ import { PostModel } from "./post.model";
 export const getPosts = async () => {
   const statement = `select a.id, a.title, a.content, JSON_OBJECT('id', b.id, 'name', b.name) user from posts a left join user b on a.userid = b.id`;
   const [data] = await connection.promise().query(statement);
+  console.log(data);
+  if (data instanceof Array) {
+    data.forEach((obj) => {
+      if (obj["user"]) {
+        obj["user"] = JSON.parse(obj["user"]);
+      }
+    });
+  }
   return data;
 };
 

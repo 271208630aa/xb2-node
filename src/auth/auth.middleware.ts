@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import * as userService from "../user/user.service";
-
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import * as userService from "../user/user.service";
+import { PUBLIC_KEY } from "../app/app.config";
+import { TokenPayload } from "./auth.interface";
+
 /**
  * 验证用户登录数据
  */
@@ -34,5 +37,42 @@ export const validateLoginData = async (
   if (!matched) {
     return next(new Error("PASSWORD_DOES_NOT_MATCH"));
   }
+
+  request.body.user = user;
+
   next();
+};
+
+/**
+ * 验证用户身份
+ */
+export const authGuard = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+) => {
+  console.log("验证用户身份");
+  try {
+    //提前 Authorization
+    const authorization = request.header("Authorization");
+    if (!authorization) {
+      throw new Error();
+    }
+
+    // 提取 JWT 令牌
+    const token = authorization.replace("Bearer ", "");
+    if (!token) {
+      throw new Error();
+    }
+
+    //验证令牌
+    const decoded = jwt.verify(token, PUBLIC_KEY, { algorithms: ["RS256"] });
+
+    //在请求里面添加当前用户
+    request.user = decoded as TokenPayload;
+
+    next();
+  } catch (error) {
+    next(new Error("UNAUTHORIZED"));
+  }
 };
