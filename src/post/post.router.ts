@@ -3,7 +3,7 @@ import * as postController from "./post.controller";
 import express from "express";
 
 import { requestUrl } from "../app/app.middleware";
-import { authGuard } from "../auth/auth.middleware";
+import { authGuard, accessControl } from "../auth/auth.middleware";
 const router = express.Router();
 
 /**
@@ -21,12 +21,22 @@ router.post("/posts", authGuard, postController.store);
  * 更新内容
  */
 
-router.post("/posts/:postId", postController.update);
+router.post(
+  "/posts/:postsId",
+  authGuard,
+  accessControl({ possession: true }),
+  postController.update
+);
 
 /**
  * 删除内容
  */
-router.delete("/posts/:postId", postController.destroy);
+router.delete(
+  "/posts/:postsId",
+  authGuard,
+  accessControl({ possession: true }),
+  postController.destroy
+);
 
 /**
  * 导出路由

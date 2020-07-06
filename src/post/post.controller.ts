@@ -54,7 +54,7 @@ export const update = async (
   next: NextFunction
 ) => {
   //获取更新内容ID
-  const { postId } = request.params;
+  const { postsId } = request.params;
 
   //准备数据
   //const { title, content } = request.body;
@@ -63,7 +63,7 @@ export const update = async (
 
   //更新
   try {
-    const data = await postService.updatePost(parseInt(postId, 10), post);
+    const data = await postService.updatePost(parseInt(postsId, 10), post);
     response.send(data);
   } catch (error) {
     next(error);
@@ -82,9 +82,9 @@ export const destroy = async (
   next: NextFunction
 ) => {
   //获取内容ID
-  const { postId } = request.params;
+  const { postsId } = request.params;
   try {
-    const data = await postService.deletePost(parseInt(postId, 10));
+    const data = await postService.deletePost(parseInt(postsId, 10));
     response.send(data);
   } catch (error) {
     next(error);
